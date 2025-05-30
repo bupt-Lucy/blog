@@ -259,7 +259,7 @@ table:not([class]) tr:hover {
   background: var(--block);
 }
 *[ff=title] {
-  font-family: system-ui, "LXGW WenKai Screen", "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-family: "LXGW WenKai Screen", system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
 }
 blockquote {
   display: block;
