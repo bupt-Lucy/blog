@@ -259,7 +259,7 @@ table:not([class]) tr:hover {
   background: var(--block);
 }
 *[ff=title] {
-  font-family: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-family: system-ui, "LXGW WenKai Screen", "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
 }
 blockquote {
   display: block;
@@ -946,7 +946,7 @@ table:not([class]) {
   outline: none;
 }
 html {
-  font-family: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-family: system-ui, "LXGW WenKai Screen", "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -5803,7 +5803,7 @@ details.toc[open] >div.body section .header+.doc_tree {
 .search-wrapper .search-input {
   width: 100%;
   box-sizing: border-box;
-  font-family: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-family: system-ui, "LXGW WenKai Screen", "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
   font-size: 0.875rem;
   padding: 12px 0;
   color: var(--text);
