@@ -1,0 +1,20 @@
+name: Seckill System
+title: Seckill System - ing
+subtitle: 'Seckill System | 进化中'
+tags: 秒杀系统
+icon: https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509302201141.jpg
+description: Seckill System 进化中。
+repo: bupt-Lucy/seckill-system
+search:
+  filter: /wiki/Seckill/
+  placeholder: 在 Seckill System 中搜索...
+leftbar: 
+  - tree
+  - related
+base_dir: /wiki/Seckill/
+tree:
+  - 1-秒杀项目1.0-丢失更新和锁失效
+  - 1-秒杀项目1.1-读写分离
+  - 1-秒杀项目1.2-流量控制
+  - 1-秒杀项目1.3-异步处理和优化
+  - 1-秒杀项目2.0-Redis机制

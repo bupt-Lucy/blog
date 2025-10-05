@@ -1,0 +1,862 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.30.0" theme-name="Stellar" theme-version="1.30.0">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality - Xylumina</title>
+
+  
+    <meta name="description" content="老师任务：“连接你的课题，读一下这篇综述，并沿着参考文献好好追踪一下视频aigc的技术，写一篇读后文（最好配合一些复现数据），结合这些，寻找一个点，开学前写一篇小论文的初稿出来，有没有问题。”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality">
+<meta property="og:url" content="https://www.xylumina.top/2025/09/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-1/index.html">
+<meta property="og:site_name" content="Xylumina">
+<meta property="og:description" content="老师任务：“连接你的课题，读一下这篇综述，并沿着参考文献好好追踪一下视频aigc的技术，写一篇读后文（最好配合一些复现数据），结合这些，寻找一个点，开学前写一篇小论文的初稿出来，有没有问题。”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121404717.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121415048.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121417143.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418882.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418904.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429586.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429653.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429900.png">
+<meta property="article:published_time" content="2025-09-12T05:34:02.000Z">
+<meta property="article:modified_time" content="2025-09-12T07:05:11.214Z">
+<meta property="article:author" content="Xylumina">
+<meta property="article:tag" content="thesis">
+<meta property="article:tag" content="academic">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121404717.png">
+  
+  
+  
+  <meta name="keywords" content="thesis,academic">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.30.0">
+
+
+  
+    <link rel="shortcut icon" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202505301639314.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/lxgwwenkaiscreen.css" media="print" onload="this.media='all'">
+</head>
+<body>
+
+<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202505301639314.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Xylumina</div><div class="sub normal cap">天才程序员的崛起之路</div><div class="sub hover cap" style="opacity:0"> 耐心</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/10/05/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE2.0-Redis%E6%9C%BA%E5%88%B6/"><span class="title">1-秒杀项目2.0-Redis机制</span></a><a class="item title" href="/2025/10/03/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.3-%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E5%92%8C%E4%BC%98%E5%8C%96/"><span class="title">1-秒杀项目1.3-异步处理和优化</span></a><a class="item title" href="/2025/10/03/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.2-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/"><span class="title">1-秒杀项目1.2-流量控制</span></a><a class="item title" href="/2025/09/25/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.0-%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0%E5%92%8C%E9%94%81%E5%A4%B1%E6%95%88/"><span class="title">1-秒杀项目1.0-丢失更新和锁失效</span></a><a class="item title" href="/2025/10/01/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.1-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/"><span class="title">1-秒杀项目1.1-读写分离</span></a><a class="item title" href="/2025/05/31/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"><span class="title">建站要闻</span></a><a class="item title" href="/2025/09/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-1/"><span class="title">论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a><a class="social" onclick="switchTheme()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" fill-rule="evenodd" d="M582.4 326.4c-140.8 0-256 115.2-256 256s115.2 256 256 256 256-115.2 256-256-115.2-256-256-256z m0 448c-70.4 0-131.2-36.8-164.8-92.8 12.8 3.2 27.2 4.8 40 4.8 121.6 0 219.2-99.2 219.2-219.2 0-17.6-1.6-35.2-6.4-52.8 60.8 32 102.4 96 102.4 169.6 1.6 104-84.8 190.4-190.4 190.4zM582.4 262.4c17.6 0 32-14.4 32-32v-128c0-17.6-14.4-32-32-32s-32 14.4-32 32v128c0 17.6 14.4 32 32 32zM262.4 582.4c0-17.6-14.4-32-32-32h-128c-17.6 0-32 14.4-32 32s14.4 32 32 32h128c17.6 0 32-14.4 32-32zM310.4 356.8c6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6 12.8-12.8 12.8-32 0-44.8l-91.2-91.2c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l91.2 91.2zM944 220.8c-12.8-12.8-32-12.8-44.8 0l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-33.6 0-44.8zM310.4 808l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-32 0-44.8-11.2-11.2-32-11.2-44.8 0z"></path></svg></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-12T05:34:02.000Z">2025-09-12</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-09-12T07:05:11.214Z">2025-09-12</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h3 id="一、论文内容"><a href="#一、论文内容" class="headerlink" title="一、论文内容"></a>一、论文内容</h3><p>  详细调研了32篇关于视频生成的论文，以确定决定AIGC视频生成质量的关键架构组件和训练策略。</p>
+<h4 id="1-长视频生成方法的架构分类"><a href="#1-长视频生成方法的架构分类" class="headerlink" title="1. 长视频生成方法的架构分类"></a>1. 长视频生成方法的架构分类</h4>  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121404717.png" alt="长视频生成方法的架构分类"/><a class="image-download blur" style="opacity:0" target="_blank" download="长视频生成方法的架构分类" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121404717.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">长视频生成方法的架构分类</span></div></div>
+<h5 id="1-1-关键帧生成-插帧"><a href="#1-1-关键帧生成-插帧" class="headerlink" title="1.1 关键帧生成+插帧"></a>1.1 关键帧生成+插帧</h5><p>  技术核心： 解耦“内容”与“运动”。</p>
+<p>  阶段一：关键帧生成<br>  技术： 使用强大的文本到图像模型 (如 Stable Diffusion, DALL-E) 或 低频采样的文本到视频模型，生成在时间上稀疏但内容上关键的画面。这些帧定义了场景的主要布局、主体和语义。此阶段专注于空间域的质量和语义准确性。</p>
+<p>  阶段二：帧插值&#x2F;运动生成<br>  技术： 使用视频帧插值模型或运动填充模型。这些模型通常是轻量的，专注于学习两个帧之间的光流或潜在运动表示，以生成中间帧。此阶段专注于时间域的连贯性和平滑性。</p>
+<p>  优： 突破了生成长视频的长度限制；可利用最先进的文生图模型保证画面质量。</p>
+<p>  劣： 流程串行，总生成时间变长；两个阶段若使用独立模型，可能导致风格、外观不一致；插值错误会引入不自然的运动。</p>
+<h5 id="1-2-分块生成与拼接"><a href="#1-2-分块生成与拼接" class="headerlink" title="1.2 分块生成与拼接"></a>1.2 分块生成与拼接</h5><p>  技术核心： 分治，将长视频分解为可并行处理的独立短片段。</p>
+<p>  将长序列划分为多个不重叠的时间块。每个块由一个共享权重的视频生成模型独立生成。所有块生成后，在时间维度上进行拼接。</p>
+<p>  优： 大幅降低峰值显存占用，是生成长视频最实用的方法之一；天然支持并行生成，加快速度。</p>
+<p>  劣： 块间一致性仍是核心挑战，即便采用高级训练技巧，也难以达到端到端模型的完美流畅度。</p>
+<h5 id="1-3-潜在空间高压缩"><a href="#1-3-潜在空间高压缩" class="headerlink" title="1.3 潜在空间高压缩"></a>1.3 潜在空间高压缩</h5><p>  技术核心： 降维，在高度压缩的潜在空间中操作，极大减少处理序列的Token数量。</p>
+<p>  编码：使用如VAE、VQ-VAE或VQ-GAN的编码器，将图像&#x2F;视频帧压缩到一个高度抽象的潜在表示。压缩比可以非常高（例如，将256px图像压缩为32x32的潜在编码，空间上压缩8倍）。</p>
+<p>  在潜在空间中生成： 扩散或自回归过程不是在像素空间，而是在这个压缩后的潜在空间中进行。要处理的数据量减少了数十至数百倍。</p>
+<p>  解码： 最后通过解码器将潜在表示转换回像素空间。</p>
+<p>  优： 效率的革命性提升，使得在消费级GPU上运行视频生成成为可能。</p>
+<p>  劣： 压缩必然伴随信息损失。高压缩会丢失细节，导致纹理模糊、高频信息（如精细边缘、文字）失真，以及快速运动中的伪影。</p>
+<h5 id="1-4-端到端时空建模"><a href="#1-4-端到端时空建模" class="headerlink" title="1.4 端到端时空建模"></a>1.4 端到端时空建模</h5><p>  技术核心： 统一建模，将时间视为一个统一的维度，用3D卷积&#x2F;注意力共同建模时空信息。</p>
+<p>  3D U-Net &#x2F; DiT： 模型 backbone 使用 3D U-Net &#x2F; DiT。patch不再是2D的图像块，而是3D的时空立方体。模型一次性看到一个小的时间片段，从而能够联合理解空间外观和时间运动。</p>
+<p>  位置编码： 使用3D RoPE等高级位置编码，同时编码空间位置和时间位置。</p>
+<p>  代表： Sora 的技术报告表明其属于此类范式。它通过将视频转换为时空patch的序列，然后用类似GPT的Transformer进行生成。</p>
+<p>  优： 理论上质量最高的方法。能产生最连贯、物理最合理的运动，因为它能直接对时空联合分布进行建模。</p>
+<p>  劣： 计算和内存开销巨大。序列长度是 帧数 × 高度 × 宽度，这限制了其直接生成的视频长度和分辨率。是“梦想架构”，但目前对算力要求极高。</p>
+<h5 id="1-5-自回归Token预测"><a href="#1-5-自回归Token预测" class="headerlink" title="1.5 自回归Token预测"></a>1.5 自回归Token预测</h5><p>  技术核心：范式转换，将视频生成视为“下一个token预测”问题，统一文本和视频的生成范式。</p>
+<p>  Token化： 使用强大的视觉分词器（如MAGVIT-v2, VQ-GAN）将每帧图像转换为一系列离散的token。</p>
+<p>  序列建模： 将文本token和视频token拼接成一个长的多模态序列。</p>
+<p>  自回归生成： 使用一个Decoder-Only的大型Transformer（如GPT）来按顺序预测下一个视觉token。</p>
+<p>  代表： Google 的 VideoPoet 是典型代表。</p>
+<p>  优： 架构极其简洁统一；可轻松利用来自LLM的 scaling law 和优化技巧；理论上可生成无限长视频。</p>
+<p>  劣： 自回归生成速度慢（无法并行解码）；错误会累积；对分词器的质量依赖极高。</p>
+<h4 id="2-长视频生成方法的关键架构组件"><a href="#2-长视频生成方法的关键架构组件" class="headerlink" title="2. 长视频生成方法的关键架构组件"></a>2. 长视频生成方法的关键架构组件</h4>  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121415048.png" alt="AIGC视频生成流程"/><a class="image-download blur" style="opacity:0" target="_blank" download="AIGC视频生成流程" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121415048.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">AIGC视频生成流程</span></div></div>
+
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121417143.png" alt="输入处理层"/><a class="image-download blur" style="opacity:0" target="_blank" download="输入处理层" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121417143.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">输入处理层</span></div></div>
+<p>  Text-Visual Tower ：<br>  负责理解和处理条件输入（文本、图像、音频）的组件集合</p>
+<p>  从“T5系列+CLIP”组合转向“多模态大语言模型 (MLLM)”。</p>
+<p>  旧范式 ： 使用 T5&#x2F;T5-XXL&#x2F;umT5 等强大文本编码器与 CLIP 结合。T5负责深度语义理解，CLIP负责图文对齐。</p>
+<p>  趋势： 使用 MLLM（如 LLaVA, Qwen2-VL）单一模型替代上述组合。MLLM不仅能理解复杂语义，还能更好地理解空间指令（如“左边的猫”），实现更精细的视觉-文本特征对齐，减少语义漂移。HunyuanVideo 是这一趋势的代表。</p>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418882.png" alt="核心生成层"/><a class="image-download blur" style="opacity:0" target="_blank" download="核心生成层" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418882.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">核心生成层</span></div></div>
+
+<p>  Backbone：<br>  3D U-Net  —–&gt;  DiT  —-&gt; MM-DiT —-&gt; Flux-MM-DiT<br>  Decoder-only Transformer LLM<br>  像GPT那样的纯自回归Transformer，代表模型（如VideoPoet）将视频生成视为“下一个token预测”问题。<br>  Positional Encodings：<br>  Sinusoidal&#x2F;RoPE        ——–&gt;        3DRoPE </p>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418904.png" alt="输出优化层"/><a class="image-download blur" style="opacity:0" target="_blank" download="输出优化层" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121418904.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">输出优化层</span></div></div>
+<p>  Visual-Video Tower ：<br>  负责将内部表示转换为最终视频的组件</p>
+<p>  SD 2D VAE                ————–&gt;           3D VAE &#x2F; Video VAE<br>  从Stable Diffusion继承的2D编码器                前沿模型专用，能更好地压缩和重建时间信息，生成更连贯的视频。</p>
+<p>  MAGVIT-v2: 视频Tokenize模型，用于自回归方案。</p>
+<p>  双VAE 架构成为新趋势。使用两个独立的编码器分别处理静态外观特征和时序动态特征。<br>  解耦外观与运动，使模型学习更专注。显著降低训练成本（如Open-Sora 2.0降低5-10倍）。更好地保持多主体身份一致性（如VideoAlchemist）。</p>
+<h4 id="3-前沿AIGC视频生成工具"><a href="#3-前沿AIGC视频生成工具" class="headerlink" title="3. 前沿AIGC视频生成工具"></a>3. 前沿AIGC视频生成工具</h4>  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429586.png" alt="AIGC视频生成工具-1"/><a class="image-download blur" style="opacity:0" target="_blank" download="AIGC视频生成工具-1" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429586.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">AIGC视频生成工具-1</span></div></div>
+<p>  HunyuanVideo (腾讯)：使用 Flux-MM-DiT 架构。其最大特点是使用自研的 Hunyuan MLLM 作为文本编码器，在理解中文语境和复杂指令方面表现出色。也采用了3D VAE和3D RoPE。参数量13B，能生成720p的高清视频。<br>  Sora (OpenAI)：尽管细节未完全公开，但已知其使用 Diffusion Transformer (DiT) 作为核心架构。它的一大革命性能力是支持可变分辨率、持续时间和宽高比的生成，这与之前固定尺寸的模型截然不同。能生成长达1分钟的1080p高清视频，具有惊人的长程连贯性和世界模拟能力（如物体符合物理规律运动）。<br>  Stable Video Diffusion (SVD) (Stability AI)：目前最流行、应用最广的开源视频生成模型之一。它是Stable Diffusion的图像到视频专门化版本。基于3D U-Net架构，是一个图像到视频的模型，这意味着你需要先有一张图片，它才能生成一段视频。它采用了帧间插值技术来生成长视频。支持生成14或25帧的576x1024分辨率视频。虽然在绝对质量上不如Sora，但其生成速度和质量在开源模型中非常均衡。</p>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429653.png" alt="AIGC视频生成工具-2"/><a class="image-download blur" style="opacity:0" target="_blank" download="AIGC视频生成工具-2" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429653.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">AIGC视频生成工具-2</span></div></div>
+<p>  Veo 3 (Google DeepMind)：基于DiT架构，并集成了多种先进的编码技术和训练目标。它旨在生成高质量的1080p视频，并同样支持长视频生成。官方演示显示其能生成超过一分钟的高质量、连贯视频。它特别强调了对复杂文本指令的精确理解和 cinematic 质量。<br>  Open-Sora ：复现Sora。旨在通过完全开源的方式，逐步实现与Sora类似的能力。采用了最先进的Flux-MM-DiT作为主干网络，并使用了双VAE设计（Hunyuan 3DVAE + 自编码器）来处理外观和运动。它代表了开源社区的顶尖技术水平。支持生成256p 到 768p 分辨率的视频，参数量达到11B。其目标是不断追赶闭源模型的性能。</p>
+  <div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429900.png" alt="AIGC视频生成工具-3"/><a class="image-download blur" style="opacity:0" target="_blank" download="AIGC视频生成工具-3" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509121429900.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">AIGC视频生成工具-3</span></div></div>
+<p>  AnimateDiff：基于3D U-Net，它可以被注入到任何基于Stable Diffusion的图像模型中，从而让静态图像模型“动起来”。不直接决定分辨率，而是依赖于底层图像模型的能力。极大地扩展了现有图像模型的能力，用户可以使用自己喜欢的任何图像模型来创建视频，降低了视频生成的门槛。<br>  VideoPoet (Google)：非扩散模型路径。它证明了自回归方案在视频生成上同样有效。使用纯Transformer架构（Decoder-Only LLM），将视频和音频都转换为离散的token，像生成文本一样生成视频。支持生成多种分辨率和长宽比的视频，并能完成视频风格化、修复等多种任务。提供了一种与扩散模型截然不同的技术思路，架构非常简洁统一，潜力巨大。</p>
+<h3 id="二、延伸学习"><a href="#二、延伸学习" class="headerlink" title="二、延伸学习"></a>二、延伸学习</h3><p>深度学习基础都忘光了</p>
+<h4 id="1-backbone-图像扩散模型-3D-U-Net-CNN-DiT-Transformer"><a href="#1-backbone-图像扩散模型-3D-U-Net-CNN-DiT-Transformer" class="headerlink" title="1. backbone -&gt; 图像扩散模型 -&gt; 3D U-Net -&gt; CNN -&gt; DiT -&gt; Transformer"></a>1. backbone -&gt; 图像扩散模型 -&gt; 3D U-Net -&gt; CNN -&gt; DiT -&gt; Transformer</h4><h4 id="2-VAE"><a href="#2-VAE" class="headerlink" title="2. VAE"></a>2. VAE</h4><h4 id="3-T5-CLIP-MLLM"><a href="#3-T5-CLIP-MLLM" class="headerlink" title="3. T5&#x2F;CLIP&#x2F;MLLM"></a>3. T5&#x2F;CLIP&#x2F;MLLM</h4><h3 id="三、AIGC视频检测点"><a href="#三、AIGC视频检测点" class="headerlink" title="三、AIGC视频检测点"></a>三、AIGC视频检测点</h3><p>现代视频生成模型的技术特点，恰恰决定了其输出结果的“指纹”和可检测的漏洞。</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>漏洞类别</strong></th>
+<th align="left"><strong>技术根源</strong></th>
+<th align="left"><strong>具体表现与取证线索</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. 物理不合理性</strong></td>
+<td align="left">模型对复杂物理规律的<strong>理解不完全</strong>或<strong>近似错误</strong>。</td>
+<td align="left">• <strong>光影不一致</strong>： 光源方向、物体阴影在帧间发生跳变或不匹配。 • <strong>流体与碰撞异常</strong>： 水、火、烟雾的运动违反物理规律；物体碰撞后的运动轨迹不自然。 • <strong>相机模型违背</strong>： 生成的相机运动（如晃动、变焦）与真实相机拍摄的动力学特征不符。</td>
+</tr>
+<tr>
+<td align="left"><strong>2. 压缩与重构伪影</strong></td>
+<td align="left"><strong>高压缩VAE</strong> 导致的高频信息丢失和重建误差。</td>
+<td align="left">• <strong>高频细节缺失</strong>： 极细的线条、远处文字、密集纹理出现<strong>模糊或混淆</strong>。 • <strong>色带与色块</strong>： 在平滑的颜色渐变区域出现不自然的<strong>色带（Color Banding）</strong>。 • <strong>运动模糊失真</strong>： 动态模糊效果在整个画面上不一致，或与运动速度不匹配。</td>
+</tr>
+<tr>
+<td align="left"><strong>3. 时空不一致性</strong></td>
+<td align="left">模型在生成长序列时<strong>长程依赖建模失败</strong>。</td>
+<td align="left">• <strong>帧间闪烁</strong>： 物体表面纹理、亮度或颜色出现高频<strong>闪烁（Flickering）</strong>。 • <strong>物体突变</strong>： 物体或人物在序列中<strong>突然出现、消失或形态剧变</strong>。 • <strong>身份漂移</strong>： 生成的人脸身份特征在视频中<strong>无法保持完全一致</strong>。</td>
+</tr>
+<tr>
+<td align="left"><strong>4. 模型指纹溯源</strong></td>
+<td align="left">不同模型架构和训练数据留下的<strong>独特“风格”印记</strong>。</td>
+<td align="left">• <strong>VAE解码特征</strong>： 不同VAE解码器重建的图像在<strong>局部纹理、边缘处理方式</strong>上存在差异。 • <strong>位置编码模式</strong>： 使用3D RoPE的模型与使用正弦编码的模型，其<strong>时空关联模式</strong>可能不同。 • <strong>纹理风格</strong>： 模型训练数据集的偏向会导致生成内容具有特定的<strong>纹理或色彩风格</strong>。</td>
+</tr>
+</tbody></table>
+<hr>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2025/09/25/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.0-%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0%E5%92%8C%E9%94%81%E5%A4%B1%E6%95%88/">1-秒杀项目1.0-丢失更新和锁失效</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2025/05/31/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">建站要闻</a></div></section></div>
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p><span> 本站由 <a href="/">Xylumina</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.30.0">Stellar 1.30.0</a> 主题创建。</span><br><span> 本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</span></p>
+<!--不蒜子计数器-->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!--添加一个访问量-->
+<span>
+      本"<span style="color: hsl(192 98% 55%); font-weight: bold;">页面</ a></span>"访问 <span id="busuanzi_value_page_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 次 | 总访问 <span id="busuanzi_value_site_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span>       次 | 总访客 <span id="busuanzi_value_site_uv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 人
+</span>
+</br>
+<span id="runtime_span"></span>
+<script type="text/javascript">
+function show_runtime() {
+    window.setTimeout("show_runtime()", 1000);
+    X = new Date("2025/05/29 22:00:00");
+    Y = new Date();
+    T = (Y.getTime() - X.getTime());
+    M = 24 * 60 * 60 * 1000;
+    a = T / M;
+    A = Math.floor(a);
+    b = (a - A) * 24;
+    B = Math.floor(b);
+    c = (b - B) * 60;
+    C = Math.floor((b - B) * 60);
+    D = Math.floor((c - C) * 60);
+    runtime_span.innerHTML = "本站已运行 " + A + "天" + B + "小时" + C + "分" + D + "秒"
+}
+show_runtime();
+</script>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%BA%E6%96%87%E5%86%85%E5%AE%B9"><span class="toc-text">一、论文内容</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95%E7%9A%84%E6%9E%B6%E6%9E%84%E5%88%86%E7%B1%BB"><span class="toc-text">1. 长视频生成方法的架构分类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-%E5%85%B3%E9%94%AE%E5%B8%A7%E7%94%9F%E6%88%90-%E6%8F%92%E5%B8%A7"><span class="toc-text">1.1 关键帧生成+插帧</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-%E5%88%86%E5%9D%97%E7%94%9F%E6%88%90%E4%B8%8E%E6%8B%BC%E6%8E%A5"><span class="toc-text">1.2 分块生成与拼接</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-3-%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4%E9%AB%98%E5%8E%8B%E7%BC%A9"><span class="toc-text">1.3 潜在空间高压缩</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-4-%E7%AB%AF%E5%88%B0%E7%AB%AF%E6%97%B6%E7%A9%BA%E5%BB%BA%E6%A8%A1"><span class="toc-text">1.4 端到端时空建模</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-5-%E8%87%AA%E5%9B%9E%E5%BD%92Token%E9%A2%84%E6%B5%8B"><span class="toc-text">1.5 自回归Token预测</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E9%95%BF%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E6%96%B9%E6%B3%95%E7%9A%84%E5%85%B3%E9%94%AE%E6%9E%B6%E6%9E%84%E7%BB%84%E4%BB%B6"><span class="toc-text">2. 长视频生成方法的关键架构组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%89%8D%E6%B2%BFAIGC%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7"><span class="toc-text">3. 前沿AIGC视频生成工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%BB%B6%E4%BC%B8%E5%AD%A6%E4%B9%A0"><span class="toc-text">二、延伸学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-backbone-%E5%9B%BE%E5%83%8F%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B-3D-U-Net-CNN-DiT-Transformer"><span class="toc-text">1. backbone -&gt; 图像扩散模型 -&gt; 3D U-Net -&gt; CNN -&gt; DiT -&gt; Transformer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-VAE"><span class="toc-text">2. VAE</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-T5-CLIP-MLLM"><span class="toc-text">3. T5&#x2F;CLIP&#x2F;MLLM</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81AIGC%E8%A7%86%E9%A2%91%E6%A3%80%E6%B5%8B%E7%82%B9"><span class="toc-text">三、AIGC视频检测点</span></a></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function (response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function (data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function (error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.30.0" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":"https://site-info-api-beta.vercel.app/api/v1?url={href}"},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>

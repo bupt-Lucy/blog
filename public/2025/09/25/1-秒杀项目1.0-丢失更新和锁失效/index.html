@@ -1,0 +1,990 @@
+
+<!DOCTYPE html><html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="hexo-theme" content="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.30.0" theme-name="Stellar" theme-version="1.30.0">
+  
+  <meta name="generator" content="Hexo 7.3.0">
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
+  <meta name="theme-color" content="#f9fafb">
+  
+  <title>1-秒杀项目1.0-丢失更新和锁失效 - Xylumina</title>
+
+  
+    <meta name="description" content="重新起航版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1-秒杀项目1.0-丢失更新和锁失效">
+<meta property="og:url" content="https://www.xylumina.top/2025/09/25/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.0-%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0%E5%92%8C%E9%94%81%E5%A4%B1%E6%95%88/index.html">
+<meta property="og:site_name" content="Xylumina">
+<meta property="og:description" content="重新起航版">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251103013.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251245658.png">
+<meta property="og:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251246389.png">
+<meta property="article:published_time" content="2025-09-25T01:11:57.000Z">
+<meta property="article:modified_time" content="2025-10-03T03:55:14.182Z">
+<meta property="article:author" content="Xylumina">
+<meta property="article:tag" content="Spring Boot">
+<meta property="article:tag" content="高并发">
+<meta property="article:tag" content="JUC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251103013.png">
+  
+  
+  
+  <meta name="keywords" content="Spring Boot,高并发,JUC">
+
+  <!-- feed -->
+  
+
+  <link rel="stylesheet" href="/css/main.css?v=1.30.0">
+
+
+  
+    <link rel="shortcut icon" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202505301639314.jpg">
+  
+
+  
+
+  <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.6.0/lxgwwenkaiscreen.css" media="print" onload="this.media='all'">
+</head>
+<body>
+
+<div class="l_body content tech" id="start" layout="post" ><aside class="l_left"><div class="leftbar-container">
+
+
+<header class="header"><div class="logo-wrap"><a class="avatar" href="/"><div class="bg" style="opacity:0;background-image:url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp);"></div><img no-lazy class="avatar" src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202505301639314.jpg" onerror="javascript:this.classList.add('error');this.src='https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg';"></a><a class="title" href="/"><div class="main" ff="title">Xylumina</div><div class="sub normal cap">天才程序员的崛起之路</div><div class="sub hover cap" style="opacity:0"> 耐心</div></a></div></header>
+
+<div class="nav-area">
+<div class="search-wrapper" id="search-wrapper"><form class="search-form"><a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();"><svg t="1705074644177" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg></a><input type="text" class="search-input" id="search-input" placeholder="站内搜索"></form><div id="search-result"></div><div class="search-no-result">没有找到内容！</div></div>
+
+
+<nav class="menu dis-select"><a class="nav-item active" title="博客" href="/" style="color:#1BCDFC"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.879 2.879C5 3.757 5 5.172 5 8v8c0 2.828 0 4.243.879 5.121C6.757 22 8.172 22 11 22h2c2.828 0 4.243 0 5.121-.879C19 20.243 19 18.828 19 16V8c0-2.828 0-4.243-.879-5.121C17.243 2 15.828 2 13 2h-2c-2.828 0-4.243 0-5.121.879M8.25 17a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75M9 12.25a.75.75 0 0 0 0 1.5h6a.75.75 0 0 0 0-1.5zM8.25 9A.75.75 0 0 1 9 8.25h6a.75.75 0 0 1 0 1.5H9A.75.75 0 0 1 8.25 9" clip-rule="evenodd"/><path fill="currentColor" d="M5.235 4.058C5 4.941 5 6.177 5 8v8c0 1.823 0 3.058.235 3.942L5 19.924c-.975-.096-1.631-.313-2.121-.803C2 18.243 2 16.828 2 14v-4c0-2.829 0-4.243.879-5.121c.49-.49 1.146-.707 2.121-.803zm13.53 15.884C19 19.058 19 17.822 19 16V8c0-1.823 0-3.059-.235-3.942l.235.018c.975.096 1.631.313 2.121.803C22 5.757 22 7.17 22 9.999v4c0 2.83 0 4.243-.879 5.122c-.49.49-1.146.707-2.121.803z" opacity=".5"/></svg></a><a class="nav-item" title="文档" href="/wiki/" style="color:#3DC550"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M14.25 4.48v3.057c0 .111 0 .27.02.406a.936.936 0 0 0 .445.683a.96.96 0 0 0 .783.072c.13-.04.272-.108.378-.159L17 8.005l1.124.534c.106.05.248.119.378.16a.958.958 0 0 0 .783-.073a.936.936 0 0 0 .444-.683c.021-.136.021-.295.021-.406V3.031c.113-.005.224-.01.332-.013C21.154 2.98 22 3.86 22 4.933v11.21c0 1.112-.906 2.01-2.015 2.08c-.97.06-2.108.179-2.985.41c-1.082.286-1.99 1.068-3.373 1.436c-.626.167-1.324.257-1.627.323V5.174c.32-.079 1.382-.203 1.674-.371c.184-.107.377-.216.576-.323m5.478 8.338a.75.75 0 0 1-.546.91l-4 1a.75.75 0 0 1-.364-1.456l4-1a.75.75 0 0 1 .91.546" clip-rule="evenodd"/><path fill="currentColor" d="M18.25 3.151c-.62.073-1.23.18-1.75.336a8.2 8.2 0 0 0-.75.27v3.182l.75-.356l.008-.005a1.13 1.13 0 0 1 .492-.13c.047 0 .094.004.138.01c.175.029.315.1.354.12l.009.005l.749.356V3.647z"/><path fill="currentColor" d="M12 5.214c-.334-.064-1.057-.161-1.718-.339C8.938 4.515 8.05 3.765 7 3.487c-.887-.234-2.041-.352-3.018-.412C2.886 3.007 2 3.9 2 4.998v11.146c0 1.11.906 2.01 2.015 2.079c.97.06 2.108.179 2.985.41c.486.129 1.216.431 1.873.726c1.005.451 2.052.797 3.127 1.034z" opacity=".5"/><path fill="currentColor" d="M4.273 12.818a.75.75 0 0 1 .91-.545l4 1a.75.75 0 1 1-.365 1.455l-4-1a.75.75 0 0 1-.545-.91m.909-4.545a.75.75 0 1 0-.364 1.455l4 1a.75.75 0 0 0 .364-1.455z"/></svg></a><a class="nav-item" title="探索" href="/explore/" style="color:#FA6400"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M20 12a8 8 0 1 1-16 0a8 8 0 0 1 16 0" opacity=".5"/><path fill="currentColor" d="M17.712 5.453c1.047-.193 2.006-.259 2.797-.152c.77.103 1.536.393 1.956 1.064c.446.714.312 1.542-.012 2.258c-.33.728-.918 1.499-1.672 2.268c-1.516 1.547-3.836 3.226-6.597 4.697c-2.763 1.472-5.495 2.484-7.694 2.92c-1.095.217-2.098.299-2.923.201c-.8-.095-1.6-.383-2.032-1.075c-.47-.752-.296-1.63.07-2.379c.375-.768 1.032-1.586 1.872-2.403L4 12.416c0 .219.083.71.168 1.146c.045.23.09.444.123.596c-.652.666-1.098 1.263-1.339 1.756c-.277.567-.208.825-.145.925c.072.116.305.305.937.38c.609.073 1.44.018 2.455-.183c2.02-.4 4.613-1.351 7.28-2.772c2.667-1.42 4.85-3.015 6.23-4.423c.694-.707 1.15-1.334 1.377-1.836c.233-.515.167-.75.107-.844c-.07-.112-.289-.294-.883-.374c-.542-.072-1.272-.041-2.163.112L16.87 5.656c.338-.101.658-.17.842-.203"/></svg></a><a class="nav-item" title="社交" href="/friends/" style="color:#F44336"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.629 20.472l-.542.916c-.483.816-1.69.816-2.174 0l-.542-.916c-.42-.71-.63-1.066-.968-1.262c-.338-.197-.763-.204-1.613-.219c-1.256-.021-2.043-.098-2.703-.372a5 5 0 0 1-2.706-2.706C2 14.995 2 13.83 2 11.5v-1c0-3.273 0-4.91.737-6.112a5 5 0 0 1 1.65-1.651C5.59 2 7.228 2 10.5 2h3c3.273 0 4.91 0 6.113.737a5 5 0 0 1 1.65 1.65C22 5.59 22 7.228 22 10.5v1c0 2.33 0 3.495-.38 4.413a5 5 0 0 1-2.707 2.706c-.66.274-1.447.35-2.703.372c-.85.015-1.275.022-1.613.219c-.338.196-.548.551-.968 1.262" opacity=".5"/><path fill="currentColor" d="M10.99 14.308c-1.327-.978-3.49-2.84-3.49-4.593c0-2.677 2.475-3.677 4.5-1.609c2.025-2.068 4.5-1.068 4.5 1.609c0 1.752-2.163 3.615-3.49 4.593c-.454.335-.681.502-1.01.502c-.329 0-.556-.167-1.01-.502"/></svg></a></nav>
+</div>
+<div class="widgets">
+
+
+<widget class="widget-wrapper post-list"><div class="widget-header dis-select"><span class="name">最近更新</span></div><div class="widget-body fs14"><a class="item title" href="/2025/10/05/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE2.0-Redis%E6%9C%BA%E5%88%B6/"><span class="title">1-秒杀项目2.0-Redis机制</span></a><a class="item title" href="/2025/10/03/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.3-%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86%E5%92%8C%E4%BC%98%E5%8C%96/"><span class="title">1-秒杀项目1.3-异步处理和优化</span></a><a class="item title" href="/2025/10/03/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.2-%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6/"><span class="title">1-秒杀项目1.2-流量控制</span></a><a class="item title" href="/2025/09/25/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.0-%E4%B8%A2%E5%A4%B1%E6%9B%B4%E6%96%B0%E5%92%8C%E9%94%81%E5%A4%B1%E6%95%88/"><span class="title">1-秒杀项目1.0-丢失更新和锁失效</span></a><a class="item title" href="/2025/10/01/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.1-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/"><span class="title">1-秒杀项目1.1-读写分离</span></a><a class="item title" href="/2025/05/31/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"><span class="title">建站要闻</span></a><a class="item title" href="/2025/09/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-1/"><span class="title">论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality</span></a></div></widget>
+</div>
+<footer class="footer dis-select"><div class="social-wrap"><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/></a><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/></a><a class="social" href="/" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/></a><a class="social" href="/about/#comments" rel="noopener noreferrer"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/></a><a class="social" onclick="switchTheme()"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" fill-rule="evenodd" d="M582.4 326.4c-140.8 0-256 115.2-256 256s115.2 256 256 256 256-115.2 256-256-115.2-256-256-256z m0 448c-70.4 0-131.2-36.8-164.8-92.8 12.8 3.2 27.2 4.8 40 4.8 121.6 0 219.2-99.2 219.2-219.2 0-17.6-1.6-35.2-6.4-52.8 60.8 32 102.4 96 102.4 169.6 1.6 104-84.8 190.4-190.4 190.4zM582.4 262.4c17.6 0 32-14.4 32-32v-128c0-17.6-14.4-32-32-32s-32 14.4-32 32v128c0 17.6 14.4 32 32 32zM262.4 582.4c0-17.6-14.4-32-32-32h-128c-17.6 0-32 14.4-32 32s14.4 32 32 32h128c17.6 0 32-14.4 32-32zM310.4 356.8c6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6 12.8-12.8 12.8-32 0-44.8l-91.2-91.2c-12.8-12.8-32-12.8-44.8 0-12.8 12.8-12.8 32 0 44.8l91.2 91.2zM944 220.8c-12.8-12.8-32-12.8-44.8 0l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-33.6 0-44.8zM310.4 808l-91.2 91.2c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.4 9.6 22.4 9.6 8 0 16-3.2 22.4-9.6l91.2-91.2c12.8-12.8 12.8-32 0-44.8-11.2-11.2-32-11.2-44.8 0z"></path></svg></a></div></footer>
+</div></aside><div class="l_main" id="main">
+
+
+
+
+
+<div class="article banner top">
+  <div class="content">
+    <div class="top bread-nav footnote"><div class="left"><div class="flex-row" id="breadcrumb"><a class="cap breadcrumb" href="/">主页</a>
+<span class="sep"></span><a class="cap breadcrumb" href="/">文章</a><span class="sep"></span><a class="cap breadcrumb-link" href="/categories/%E9%A1%B9%E7%9B%AE%E5%AE%9E%E6%88%98/">项目实战</a></div>
+<div class="flex-row" id="post-meta"><span class="text created">发布于：<time datetime="2025-09-25T01:11:57.000Z">2025-09-25</time></span><span class="sep updated"></span><span class="text updated">更新于：<time datetime="2025-10-03T03:55:14.182Z">2025-10-03</time></span></div></div></div>
+    
+    <div class="bottom only-title">
+      
+      <div class="text-area">
+        <h1 class="text title"><span>1-秒杀项目1.0-丢失更新和锁失效</span></h1>
+        
+      </div>
+    </div>
+    
+  </div>
+  </div><article class="md-text content"><h3 id="一、项目概述"><a href="#一、项目概述" class="headerlink" title="一、项目概述"></a>一、项目概述</h3><ul>
+<li>项目名称：高并发-秒杀系统（1.0 单体应用原型）</li>
+<li>项目目标：从零开始设计并实现一个功能完备的秒-杀业务原型，旨在深入理解高并发场景下常见的技术挑战，如数据一致性（超卖、重复下单）、性能瓶颈等，并通过多种技术手段进行分析和优化。</li>
+<li>技术栈：<ul>
+<li>后端框架：Spring Boot</li>
+<li>数据持久层：Spring Data JPA,Hibernate</li>
+<li>数据库：MYSQL</li>
+<li>构建工具：Maven</li>
+<li>测试工具：JMeter</li>
+</ul>
+</li>
+</ul>
+<h3 id="二、项目搭建"><a href="#二、项目搭建" class="headerlink" title="二、项目搭建"></a>二、项目搭建</h3><h4 id="1-环境搭建和初始化"><a href="#1-环境搭建和初始化" class="headerlink" title="1. 环境搭建和初始化"></a>1. 环境搭建和初始化</h4><ul>
+<li>使用 Spring Initializr 快速搭建了项目骨架，并集成 Spring Web、Spring Data JPA、MySQL Driver 等核心依赖。<blockquote>
+<p>Spring Web:是构建Web应用程序的核心模块。内嵌Web服务器，提供Spring MVC框架，用于HTTP报文处理能力。负责监听网络接口，接受所有外来的HTTP请求，然后根据请求的URL和方法，精准的转接给后台相应的Controller去处理。<br>Spring Data JPA：是一个用来极大简化数据库访问的框架。可以自动化SQL，进行对象-关系映射（ORM），并进行简化的自定义查询。</p>
+</blockquote>
+</li>
+<li>在 application.properties 中完成了数据库连接池的基础配置。</li>
+</ul>
+<h4 id="2-核心业务"><a href="#2-核心业务" class="headerlink" title="2. 核心业务"></a>2. 核心业务</h4><ul>
+<li>设计核心数据表<ul>
+<li>商品表<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> `product` (</span><br><span class="line">`id` <span class="type">BIGINT</span> <span class="keyword">NOT NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;商品ID&#x27;</span>,</span><br><span class="line">`name` <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;商品名称&#x27;</span>,</span><br><span class="line">`title` <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;商品标题&#x27;</span>,</span><br><span class="line">`image` <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;商品图片URL&#x27;</span>,</span><br><span class="line">`price` <span class="type">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;秒杀价格&#x27;</span>,</span><br><span class="line">`stock` <span class="type">INT</span> <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;库存数量&#x27;</span>,</span><br><span class="line">`start_time` DATETIME <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;秒杀开始时间&#x27;</span>,</span><br><span class="line">`end_time` DATETIME <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;秒杀结束时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure></li>
+<li>订单表<br>在订单表的设计中加入了 (user_id, product_id)的唯一索引，即每个用户只能下一单。<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> `seckill_order` (</span><br><span class="line">`id` <span class="type">BIGINT</span> <span class="keyword">NOT NULL</span> AUTO_INCREMENT,</span><br><span class="line">`user_id` <span class="type">BIGINT</span> <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`product_id` <span class="type">BIGINT</span> <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;商品ID&#x27;</span>,</span><br><span class="line">`order_price` <span class="type">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;订单成交价格&#x27;</span>,</span><br><span class="line">`create_time` DATETIME <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY KEY</span> (`id`),</span><br><span class="line"><span class="keyword">UNIQUE</span> KEY `idx_user_product` (`user_id`, `product_id`) COMMENT <span class="string">&#x27;唯一索引，防止同一用户重复秒杀同一商品&#x27;</span></span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h4 id="3-基础功能实现"><a href="#3-基础功能实现" class="headerlink" title="3. 基础功能实现"></a>3. 基础功能实现</h4><ul>
+<li>采用标准的MVC分层架构，创建Controller, Service, Repository 层。<blockquote>
+<p>Controller：作为应用的入口，直接处理外部的HTTP请求。<br>Service：实现应用的核心业务逻辑。<br>DAO：负责与数据库进行直接交互，完成数据的持久化操作。<br>Model&#x2F;Entity：数据的载体，定义了应用中的核心领域对象。</p>
+</blockquote>
+</li>
+</ul>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251103013.png" alt="请求过程"/><a class="image-download blur" style="opacity:0" target="_blank" download="请求过程" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251103013.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">请求过程</span></div></div>
+
+<ul>
+<li>实现秒杀接口的核心业务逻辑。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">processSeckill</span><span class="params">(Long productId, Long userId)</span> &#123;</span><br><span class="line"><span class="comment">// 1. 从数据库读取 Product 对象到内存</span></span><br><span class="line">Optional&lt;Product&gt; productOpt = productRepository.findById(productId);</span><br><span class="line"><span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> productOpt.get(); <span class="comment">// 假设此时读到的 stock 是 100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ... 其他检查 ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在内存中计算新库存</span></span><br><span class="line">product.setStock(product.getStock() - <span class="number">1</span>); <span class="comment">// 内存中的 stock 变为 99</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 将内存中的 Product 对象保存回数据库</span></span><br><span class="line">productRepository.save(product); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 创建订单</span></span><br><span class="line"><span class="type">SeckillOrder</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillOrder</span>();</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">orderRepository.save(order);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="string">&quot;秒杀成功！&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在初始版本中不加入任何的并发控制，后续会通过压力测试来暴露和分析最原始的并发问题。</li>
+</ul>
+<h3 id="三、并发问题的分析与演进"><a href="#三、并发问题的分析与演进" class="headerlink" title="三、并发问题的分析与演进"></a>三、并发问题的分析与演进</h3><h4 id="1-库存设置与JMeter设置"><a href="#1-库存设置与JMeter设置" class="headerlink" title="1. 库存设置与JMeter设置"></a>1. 库存设置与JMeter设置</h4><ul>
+<li>stock设置为100</li>
+<li>JMeter<ul>
+<li>线程数：200</li>
+<li>1秒内同时发出200个并发请求</li>
+<li>计数器自增UserId</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-实验结果"><a href="#2-实验结果" class="headerlink" title="2. 实验结果"></a>2. 实验结果</h4><ul>
+<li><p>订单数增加了200个但是库存数只减少了20个</p>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251245658.png" alt="订单数"/><a class="image-download blur" style="opacity:0" target="_blank" download="订单数" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251245658.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">订单数</span></div></div>
+<div class="tag-plugin image"><div class="image-bg"><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251246389.png" alt="库存数"/><a class="image-download blur" style="opacity:0" target="_blank" download="库存数" href="https://xylumina.oss-cn-beijing.aliyuncs.com/img/202509251246389.png"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a></div><div class="image-meta"><span class="image-caption center">库存数</span></div></div>
+</li>
+<li><p>分析原因：事务和内存状态————Spring的@Transaction注解和JPA的工作机制</p>
+<ul>
+<li>一级缓存：当第一个请求通过findById加载了ID为1的商品后，这个product对象会被放入当前事务的一级缓存中。</li>
+<li>事务提交时才真正更新：productRepository.save(product)这个操作，并不是立即向数据库发送UPDATE语句，而要等到整个processSeckill方法执行完毕、事务准备提交时，才会生成并发送给数据库。</li>
+</ul>
+</li>
+<li><p>丢失的更新（stock&#x3D;80）：前十个线程有可能都加载到了还没有提交的product，即此时读到的stock依然是100，后面的九次更新覆盖了第一次更新，所以最终结果和只更新一次是完全一样的（stock变成了99）。每次都有一批线程在竞争，但最后只有一个线程的更新“活”到了最后，导致库存最终只减少了大约20次。</p>
+</li>
+<li><p>订单的正常建立（新增order数&#x3D;200）：orderRepository.save(order)这个操作，因为每个订单的主键都是自增的，并且（user_id,product_id）的组合也是唯一的，所以每一次订单的插入都能成功。</p>
+</li>
+</ul>
+<h4 id="3-改进"><a href="#3-改进" class="headerlink" title="3. 改进"></a>3. 改进</h4><h5 id="第一次尝试-在-processSeckill-方法上加-synchronized-锁"><a href="#第一次尝试-在-processSeckill-方法上加-synchronized-锁" class="headerlink" title="第一次尝试-在 processSeckill 方法上加 synchronized 锁"></a>第一次尝试-在 processSeckill 方法上加 synchronized 锁</h5><ul>
+<li>预期结果:锁生效，200个线程变为串行处理，数据一致性得以保证。即库存数为0，订单数为100，但吞吐量降低，平均响应时间升高。</li>
+</ul>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">synchronized</span>  String <span class="title function_">processSeckill</span><span class="params">(Long productId, Long userId)</span> &#123;</span><br><span class="line"><span class="comment">// 1. 从数据库读取 Product 对象到内存</span></span><br><span class="line">Optional&lt;Product&gt; productOpt = productRepository.findById(productId);</span><br><span class="line"><span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> productOpt.get(); <span class="comment">// 假设此时读到的 stock 是 100</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ... 其他检查 ...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 在内存中计算新库存</span></span><br><span class="line">product.setStock(product.getStock() - <span class="number">1</span>); <span class="comment">// 内存中的 stock 变为 99</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 将内存中的 Product 对象保存回数据库</span></span><br><span class="line">productRepository.save(product); </span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 创建订单</span></span><br><span class="line"><span class="type">SeckillOrder</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillOrder</span>();</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">orderRepository.save(order);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="string">&quot;秒杀成功！&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结果：数据依然错误，订单数为200，库存数为79,而吞吐量和平均响应时间没有发生明显变化。</li>
+<li>分析：@Transaction 与 synchronized 的冲突<ul>
+<li>当给一个方法加上@Transaction注解时，Spring为了能够控制事务的开启、提交和回滚，并不会让你直接调用这个方法，相反，Spring会在运行时创建一个该类的代理对象proxy。</li>
+<li>事务先生效：即代理对象的同名方法会被触发，代理对象会先开启一个事务</li>
+<li>synchronized被绕过：它是Java原生关键字，作用于对象实例的锁，但Spring的代理机制在调用目标方法时，可能会导致锁机制失效，因为代理方法本身没有synchronized，调用父类（本身SeckillService）的方法时，锁的上下文可能已经丢失或不准确。<br>即，Spring的AOP代理与Java原生的锁关键字之间存在冲突，代理绕过了锁，导致synchronized锁机制未生效。</li>
+</ul>
+</li>
+</ul>
+<h5 id="第二次尝试-在事务内使用ReentrantLock"><a href="#第二次尝试-在事务内使用ReentrantLock" class="headerlink" title="第二次尝试-在事务内使用ReentrantLock"></a>第二次尝试-在事务内使用ReentrantLock</h5><ul>
+<li><p>预期结果:锁生效，200个线程变为串行处理，数据一致性得以保证。即库存数为0，订单数为100，但吞吐量降低，平均响应时间升高。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">processSeckill</span><span class="params">(Long productId, Long userId)</span> &#123;  <span class="comment">// 1. 事务由代理对象在这里开启</span></span><br><span class="line">    <span class="comment">// 2. 在方法开始时手动加锁</span></span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// 所有业务逻辑都放在 try 块中</span></span><br><span class="line">        <span class="comment">// 其他检查</span></span><br><span class="line"></span><br><span class="line">        product.setStock(product.getStock() - <span class="number">1</span>);</span><br><span class="line">        productRepository.save(product);</span><br><span class="line"></span><br><span class="line">        <span class="type">SeckillOrder</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SeckillOrder</span>();</span><br><span class="line">        <span class="comment">// ...</span></span><br><span class="line">        orderRepository.save(order);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;秒杀成功！订单创建中...&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// 3. 【至关重要】在 finally 块中解锁，确保即使发生异常也能释放锁</span></span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;      <span class="comment">// 4. 事务由代理对象在这里提交</span></span><br></pre></td></tr></table></figure></li>
+<li><p>显示控制：lock.lock()是代码逻辑的一部分，在代理调用了实际方法之后，业务逻辑执行之前被调用。任何线程进入这个方法后，都必须先获取到这个锁才能继续执行。</p>
+</li>
+<li><p>安全释放：使用try…finally结构，确保无论业务逻辑是否成功，锁最终都会被释放，避免了“死锁”的风险。</p>
+</li>
+<li><p>结果：数据依然错误，订单数为200，库存数为79,而吞吐量和平均响应时间没有发生明显变化。</p>
+</li>
+<li><p>分析：锁的范围 VS 事务的范围</p>
+<ul>
+<li>锁释放在前，事务提交在后，所以当线程A解锁后，UPDATE语句还没有提交进入数据库，而此时线程B立即取锁进入了方法，此时B读取到的库存数还是旧值。重演丢失更新问题。</li>
+</ul>
+</li>
+</ul>
+<h5 id="第三次尝试-ReentrantLock-手动事务"><a href="#第三次尝试-ReentrantLock-手动事务" class="headerlink" title="第三次尝试-ReentrantLock + 手动事务"></a>第三次尝试-ReentrantLock + 手动事务</h5><ul>
+<li><p>预期结果:锁生效，200个线程变为串行处理，数据一致性得以保证。即库存数为0，订单数为100，但吞吐量降低，平均响应时间升高。</p>
+</li>
+<li><p>解决方案：将事务控制移入锁内</p>
+<ul>
+<li>放弃@Transaction注解，因为这个注解无法精细控制提交时机，改用最经典、最原始的手动事务管理。</li>
+<li>使用PlatformTransactionManager 来手动控制事务的开始、提交和回滚。将整个生命周期包裹在锁内。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> PlatformTransactionManager transactionManager;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">processSeckill</span><span class="params">(Long productId, Long userId)</span> &#123;</span><br><span class="line">    <span class="comment">// 1. 上锁</span></span><br><span class="line">    lock.lock();</span><br><span class="line">    </span><br><span class="line">    <span class="type">DefaultTransactionDefinition</span> <span class="variable">def</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DefaultTransactionDefinition</span>();</span><br><span class="line">    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);</span><br><span class="line">    <span class="comment">// 2. 开启事务</span></span><br><span class="line">    <span class="type">TransactionStatus</span> <span class="variable">status</span> <span class="operator">=</span> transactionManager.getTransaction(def);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="comment">// ...所有业务逻辑，和之前一样</span></span><br><span class="line">        <span class="comment">// 3. 【关键】在锁释放前，手动提交事务</span></span><br><span class="line">        transactionManager.commit(status);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;秒杀成功！订单创建中...&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="comment">//  如果发生任何异常，手动回滚事务</span></span><br><span class="line">        transactionManager.rollback(status);</span><br><span class="line">        <span class="comment">// 将异常信息返回或记录日志</span></span><br><span class="line">        <span class="keyword">return</span> e.getMessage(); </span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="comment">// 4. 最后，释放锁</span></span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>结果:数据正确，库存为0，订单数为100，吞吐量没有下降，甚至比没有并发控制的1.0 版本还要高。</p>
+</li>
+<li><p>分析: 在高并发场景下，无序的并发混乱，有时远比有序的串行执行要慢。下表为初始版本和三次尝试版本的压测数据。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>样本</th>
+<th>平均值</th>
+<th>中位数</th>
+<th>90% 百分位</th>
+<th>95% 百分位</th>
+<th>99% 百分位</th>
+<th>最小值</th>
+<th>最大值</th>
+<th>异常 %</th>
+<th>吞吐量</th>
+<th>接收 KB&#x2F;sec</th>
+<th>发送 KB&#x2F;sec</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1.0秒杀系统</td>
+<td>200</td>
+<td>740</td>
+<td>810</td>
+<td>1044</td>
+<td>1078</td>
+<td>1083</td>
+<td>254</td>
+<td>1084</td>
+<td>0.00%</td>
+<td>95.92</td>
+<td>18.27</td>
+<td>20.51</td>
+</tr>
+<tr>
+<td>2.0秒杀系统_添加关键字synchronized</td>
+<td>200</td>
+<td>578</td>
+<td>598</td>
+<td>744</td>
+<td>763</td>
+<td>767</td>
+<td>79</td>
+<td>831</td>
+<td>0.00%</td>
+<td>113.38</td>
+<td>21.59</td>
+<td>24.24</td>
+</tr>
+<tr>
+<td>2.0秒杀系统_手动添加锁ReentrantLock</td>
+<td>200</td>
+<td>638</td>
+<td>663</td>
+<td>819</td>
+<td>837</td>
+<td>879</td>
+<td>237</td>
+<td>891</td>
+<td>0.00%</td>
+<td>105.76</td>
+<td>20.14</td>
+<td>22.62</td>
+</tr>
+<tr>
+<td>2.0秒杀系统_不使用@Transaction手动加锁</td>
+<td>200</td>
+<td>905</td>
+<td>1024</td>
+<td>1148</td>
+<td>1160</td>
+<td>1175</td>
+<td>203</td>
+<td>1178</td>
+<td>0.00%</td>
+<td>100.45</td>
+<td>18.25</td>
+<td>21.48</td>
+</tr>
+</tbody></table>
+<ul>
+<li>无锁版虽然看似并行，但造成了数据库层面大量的行锁竞争、唯一键冲突错误、事务回滚，这些“无效”的数据库操作成为了真正的性能瓶颈。而加锁后的版本，虽然在应用层是串行的，但它保护了数据库，向数据库发送的是一连串干净、有效的请求，避免了数据库的内部冲突和错误处理开销，因此整体系统的有效吞吐量反而更高。</li>
+</ul>
+<h3 id="学学八股"><a href="#学学八股" class="headerlink" title="学学八股"></a>学学八股</h3><h4 id="Transaction注解-一个请求的生命周期"><a href="#Transaction注解-一个请求的生命周期" class="headerlink" title="@Transaction注解 &amp; 一个请求的生命周期"></a>@Transaction注解 &amp; 一个请求的生命周期</h4><ul>
+<li>Controller接受请求，调用Service方法，但此时Service引用的是Spring的代理对象，而不是原始实例。代理对象的方法被触发，检查到方法上有@Transaction注解，代理对象向事务管理器（platformTransactionManager）请求开启一个新的事务。从数据库连接池中获取一个数据库连接，向MySQL服务器发送指令。此时一个数据库事务的“上下文”已经建立，但还没有任何实际的业务SQL被执行。在开启事务后，代理对象才会调用原始实例的方法，开始执行业务逻辑。但需要注意的是，这个阶段中是没有发生任何数据库操作的，只是告诉JPA的持久化上下文，标记了该对象，后续需要“留意”。</li>
+<li>所有代码都执行完毕后，到达return语句，准备将结果返回。此时代理对象接收到真实方法的返回值，因为没有捕获到任何异常，代理对象判断这次业务执行是成功的，通知事务管理器可以提交事务了。事务管理器执行数据库同步，在真正COMMIT之前，JPA会执行一次Flush，生成SQL语句，发送到MYSQL服务器并执行，直到COMMIT被成功执行了，这次更新才被永久地鞋屋数据库磁盘。</li>
+<li>代理对象将你方法的返回值传递给Controller，Controller再将其封装成HTTP响应返回给用户。</li>
+</ul>
+<h4 id="锁-初步"><a href="#锁-初步" class="headerlink" title="锁-初步"></a>锁-初步</h4><ol>
+<li>Synchronized：Keyword、JVM内置的同步原语，简单、隐式的加锁和解锁机制。</li>
+</ol>
+<ul>
+<li>使用方法：修饰实例方法、修饰静态方法、修饰代码块。</li>
+<li>实现依赖于每个Java对象头部的Mark Word和JVM内部的Monitor对象监视器（当线程尝试获取锁时，JVM会执行Monitorenter字节码指令，尝试获得对象Monitor所有权。释放锁时即执行monitorexit）。</li>
+<li>锁升级机制：偏向锁—&gt;轻量级锁(当有第二个线程竞争时升级，竞争的线程通过自旋和CAS来尝试获取锁，不进入阻塞状态)—&gt;重量级锁（竞争加剧，自旋失败，升级，未获取到锁的线程会被阻塞，由内核进行调度，性能开销最大）</li>
+</ul>
+<ol start="2">
+<li>ReentrantLock：是JUC工具包的核心成员，显式加锁和解锁机制。</li>
+</ol>
+<ul>
+<li>使用方法：标准的使用范式  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 在类中声明一个 Lock 实例</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> <span class="type">ReentrantLock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">     </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">someMethod</span><span class="params">()</span> &#123;</span><br><span class="line"><span class="comment">// 2. 在 try...finally 结构中进行加锁和解锁</span></span><br><span class="line">lock.lock(); <span class="comment">// 获取锁</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line"><span class="comment">// 3. 保护的同步代码</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line"><span class="comment">// 4. 必须在 finally 块中释放锁</span></span><br><span class="line">lock.unlock();</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>实现依赖于JUC的核心框架AQS，所有获取锁失败的线程，会被封装成节点放入一个CLH虚拟双向队列中进行排队等待。当锁被释放时，会从队列头部唤醒下一个等待的线程。整个过程都在用户态完成，避免了频繁的内核态切换。<blockquote>
+<p>AQS 内部通过一个 <code>volatile</code> 的 <code>int</code> 类型的 <code>state</code> 变量来表示同步状态（0表示未锁定，&gt;0表示已锁定），并使用 <strong>CAS</strong> 操作来原子性地修改这个 <code>state</code> 值。</p>
+</blockquote>
+</li>
+<li>功能丰富：等待可中断（等待锁的线程可被中断）、可实现公平锁（按线程请求的顺序获取锁）、可实现非公平锁（允许插队、吞吐量更高）、可尝试获取锁（可在指定时间内尝试获取锁，失败则返回）、可绑定多个条件（可分组唤醒等待的线程，实现更精细的线程通信）</li>
+</ul>
+<p>选择问题：在绝大多数情况下，当并发冲突不激烈、同步逻辑简单时，优先选择Synchronized关键字，在特定的场景下，比如需要使用Synchronized不具备的高级功能时，或者是在我的秒杀项目中，需要将事务提交的完整过程都包裹在锁内，即手动控制锁时。</p>
+
+<div class="article-footer fs14">
+    <section id="license">
+      <div class="header"><span>许可协议</span></div>
+      <div class="body"><p>本文采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">署名-非商业性使用-相同方式共享 4.0 国际</a> 许可协议，转载请注明出处。</p>
+</div>
+    </section>
+    </div>
+</article>
+<div class="related-wrap" id="read-next"><section class="body"><div class="item" id="prev"><div class="note">较新文章</div><a href="/2025/10/01/1-%E7%A7%92%E6%9D%80%E9%A1%B9%E7%9B%AE1.1-%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB/">1-秒杀项目1.1-读写分离</a></div><div class="item" id="next"><div class="note">较早文章</div><a href="/2025/09/12/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB-1/">论文阅读-A Survey on Long-Video Storytelling Generation:Architectures, Consistency, and Cinematic Quality</a></div></section></div>
+
+
+
+
+
+
+<footer class="page-footer footnote"><hr><div class="text"><p><span> 本站由 <a href="/">Xylumina</a> 使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.30.0">Stellar 1.30.0</a> 主题创建。</span><br><span> 本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</span></p>
+<!--不蒜子计数器-->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!--添加一个访问量-->
+<span>
+      本"<span style="color: hsl(192 98% 55%); font-weight: bold;">页面</ a></span>"访问 <span id="busuanzi_value_page_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 次 | 总访问 <span id="busuanzi_value_site_pv" style="color: hsl(192 98% 55%); font-weight: bold;"></span>       次 | 总访客 <span id="busuanzi_value_site_uv" style="color: hsl(192 98% 55%); font-weight: bold;"></span> 人
+</span>
+</br>
+<span id="runtime_span"></span>
+<script type="text/javascript">
+function show_runtime() {
+    window.setTimeout("show_runtime()", 1000);
+    X = new Date("2025/05/29 22:00:00");
+    Y = new Date();
+    T = (Y.getTime() - X.getTime());
+    M = 24 * 60 * 60 * 1000;
+    a = T / M;
+    A = Math.floor(a);
+    b = (a - A) * 24;
+    B = Math.floor(b);
+    c = (b - B) * 60;
+    C = Math.floor((b - B) * 60);
+    D = Math.floor((c - C) * 60);
+    runtime_span.innerHTML = "本站已运行 " + A + "天" + B + "小时" + C + "分" + D + "秒"
+}
+show_runtime();
+</script>
+</div></footer>
+<div class="main-mask" onclick="sidebar.dismiss()"></div></div><aside class="l_right">
+<div class="widgets">
+
+
+
+<widget class="widget-wrapper toc" id="data-toc" collapse="false"><div class="widget-header dis-select"><span class="name">本文目录</span><a class="cap-action" onclick="sidebar.toggleTOC()" ><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></a></div><div class="widget-body"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0"><span class="toc-text">一、项目概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%A1%B9%E7%9B%AE%E6%90%AD%E5%BB%BA"><span class="toc-text">二、项目搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-text">1. 环境搭建和初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%A0%B8%E5%BF%83%E4%B8%9A%E5%8A%A1"><span class="toc-text">2. 核心业务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%9F%BA%E7%A1%80%E5%8A%9F%E8%83%BD%E5%AE%9E%E7%8E%B0"><span class="toc-text">3. 基础功能实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98%E7%9A%84%E5%88%86%E6%9E%90%E4%B8%8E%E6%BC%94%E8%BF%9B"><span class="toc-text">三、并发问题的分析与演进</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%BA%93%E5%AD%98%E8%AE%BE%E7%BD%AE%E4%B8%8EJMeter%E8%AE%BE%E7%BD%AE"><span class="toc-text">1. 库存设置与JMeter设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">2. 实验结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E6%94%B9%E8%BF%9B"><span class="toc-text">3. 改进</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%B0%9D%E8%AF%95-%E5%9C%A8-processSeckill-%E6%96%B9%E6%B3%95%E4%B8%8A%E5%8A%A0-synchronized-%E9%94%81"><span class="toc-text">第一次尝试-在 processSeckill 方法上加 synchronized 锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E5%B0%9D%E8%AF%95-%E5%9C%A8%E4%BA%8B%E5%8A%A1%E5%86%85%E4%BD%BF%E7%94%A8ReentrantLock"><span class="toc-text">第二次尝试-在事务内使用ReentrantLock</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AC%A1%E5%B0%9D%E8%AF%95-ReentrantLock-%E6%89%8B%E5%8A%A8%E4%BA%8B%E5%8A%A1"><span class="toc-text">第三次尝试-ReentrantLock + 手动事务</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AD%A6%E5%85%AB%E8%82%A1"><span class="toc-text">学学八股</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Transaction%E6%B3%A8%E8%A7%A3-%E4%B8%80%E4%B8%AA%E8%AF%B7%E6%B1%82%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">@Transaction注解 &amp; 一个请求的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%81-%E5%88%9D%E6%AD%A5"><span class="toc-text">锁-初步</span></a></li></ol></li></ol></div><div class="widget-footer">
+
+<a class="top" onclick="util.scrollTop()"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12c0-4.714 0-7.071 1.464-8.536C4.93 2 7.286 2 12 2c4.714 0 7.071 0 8.535 1.464C22 4.93 22 7.286 22 12c0 4.714 0 7.071-1.465 8.535C19.072 22 16.714 22 12 22s-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m9 15.5l3-3l3 3m-6-4l3-3l3 3"/></g></svg><span>回到顶部</span></a></div></widget>
+</div></aside><div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6h11m-11 6h11m-11 6h11M4 6h1v4m-1 0h2m0 8H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11c0-3.771 0-5.657 1.172-6.828C4.343 3 6.229 3 10 3h4c3.771 0 5.657 0 6.828 1.172C22 5.343 22 7.229 22 11v2c0 3.771 0 5.657-1.172 6.828C19.657 21 17.771 21 14 21h-4c-3.771 0-5.657 0-6.828-1.172C2 18.657 2 16.771 2 13z"/><path id="sep" stroke-linecap="round" d="M5.5 10h6m-5 4h4m4.5 7V3"/></g></svg>
+  </button>
+</div>
+</div><div class="scripts">
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `刚刚`,
+      min: `分钟前`,
+      hour: `小时前`,
+      day: `天前`,
+    },
+    root : `/`,
+    tag_plugins: {
+      chat: Object.assign({"api":"https://siteinfo.listentothewind.cn/api/v1"}),
+    }
+  };
+
+  // required plugins (only load if needs)
+  if (`local_search`) {
+    ctx.search = {};
+    ctx.search.service = `local_search`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `{"field":"all","path":"/search.json","content":true,"skip_search":null,"sort":"-date"}`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg`,
+    cover: `https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg`,
+  };
+  const deps = {
+    jquery: `https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js`,
+    marked: `https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js`
+  }
+  
+
+</script>
+
+<script type="text/javascript">
+  function RunItem() {
+    this.list = []; // 存放回调函数
+    this.start = () => {
+      for (var i = 0; i < this.list.length; i++) {
+        this.list[i].run();
+      }
+    };
+    this.push = (fn, name, setRequestAnimationFrame = true) => {
+      let myfn = fn
+      if (setRequestAnimationFrame) {
+        myfn = () => {
+          utils.requestAnimationFrame(fn)
+        }
+      }
+      var f = new Item(myfn, name);
+      this.list.push(f);
+    };
+    this.remove = (name) => {
+      for (let index = 0; index < this.list.length; index++) {
+        const e = this.list[index];
+        if (e.name == name) {
+          this.list.splice(index, 1);
+        }
+      }
+    }
+    // 构造一个可以run的对象
+    function Item(fn, name) {
+      // 函数名称
+      this.name = name || fn.name;
+      // run方法
+      this.run = () => {
+        try {
+          fn()
+        } catch (error) {
+          console.log(error);
+        }
+      };
+    }
+  }
+
+  const utils = {
+    // 懒加载 css https://github.com/filamentgroup/loadCSS
+    css: (href, before, media, attributes) => {
+      var doc = window.document;
+      var ss = doc.createElement("link");
+      var ref;
+      if (before) {
+        ref = before;
+      } else {
+        var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
+        ref = refs[refs.length - 1];
+      }
+      var sheets = doc.styleSheets;
+      if (attributes) {
+        for (var attributeName in attributes) {
+          if (attributes.hasOwnProperty(attributeName)) {
+            ss.setAttribute(attributeName, attributes[attributeName]);
+          }
+        }
+      }
+      ss.rel = "stylesheet";
+      ss.href = href;
+      ss.media = "only x";
+      function ready(cb) {
+        if (doc.body) {
+          return cb();
+        }
+        setTimeout(function () {
+          ready(cb);
+        });
+      }
+      ready(function () {
+        ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
+      });
+      var onloadcssdefined = function (cb) {
+        var resolvedHref = ss.href;
+        var i = sheets.length;
+        while (i--) {
+          if (sheets[i].href === resolvedHref) {
+            return cb();
+          }
+        }
+        setTimeout(function () {
+          onloadcssdefined(cb);
+        });
+      };
+      function loadCB() {
+        if (ss.addEventListener) {
+          ss.removeEventListener("load", loadCB);
+        }
+        ss.media = media || "all";
+      }
+      if (ss.addEventListener) {
+        ss.addEventListener("load", loadCB);
+      }
+      ss.onloadcssdefined = onloadcssdefined;
+      onloadcssdefined(loadCB);
+      return ss;
+    },
+
+    js: (src, opt) => new Promise((resolve, reject) => {
+      var script = document.createElement('script');
+      if (src.startsWith('/')) {
+        src = ctx.root + src.substring(1);
+      }
+      script.src = src;
+      if (opt) {
+        for (let key of Object.keys(opt)) {
+          script[key] = opt[key]
+        }
+      } else {
+        // 默认异步，如果需要同步，第二个参数传入 {} 即可
+        script.async = true
+      }
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function () {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    }),
+
+    jq: (fn) => {
+      if (typeof jQuery === 'undefined') {
+        utils.js(deps.jquery).then(fn)
+      } else {
+        fn()
+      }
+    },
+
+    onLoading: (el) => {
+      if (el) {
+        $(el).append('<div class="loading-wrap"><svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg></div>');
+      }
+    },
+    onLoadSuccess: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap').remove();
+      }
+    },
+    onLoadFailure: (el) => {
+      if (el) {
+        $(el).find('.loading-wrap svg').remove();
+        $(el).find('.loading-wrap').append('<svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path stroke-dasharray="60" stroke-dashoffset="60" d="M12 3L21 20H3L12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.5s" values="60;0"/></path><path stroke-dasharray="6" stroke-dashoffset="6" d="M12 10V14"><animate fill="freeze" attributeName="stroke-dashoffset" begin="0.6s" dur="0.2s" values="6;0"/></path></g><circle cx="12" cy="17" r="1" fill="currentColor" fill-opacity="0"><animate fill="freeze" attributeName="fill-opacity" begin="0.8s" dur="0.4s" values="0;1"/></circle></svg>');
+        $(el).find('.loading-wrap').addClass('error');
+      }
+    },
+    request: (el, url, callback, onFailure) => {
+      let retryTimes = 3;
+      utils.onLoading(el);
+      function req() {
+        return new Promise((resolve, reject) => {
+          let status = 0; // 0 等待 1 完成 2 超时
+          let timer = setTimeout(() => {
+            if (status === 0) {
+              status = 2;
+              timer = null;
+              reject('请求超时');
+              if (retryTimes == 0) {
+                onFailure();
+              }
+            }
+          }, 5000);
+          fetch(url).then(function (response) {
+            if (status !== 2) {
+              clearTimeout(timer);
+              resolve(response);
+              timer = null;
+              status = 1;
+            }
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Network response was not ok.');
+          }).then(function (data) {
+            retryTimes = 0;
+            utils.onLoadSuccess(el);
+            callback(data);
+          }).catch(function (error) {
+            if (retryTimes > 0) {
+              retryTimes -= 1;
+              setTimeout(() => {
+                req();
+              }, 5000);
+            } else {
+              utils.onLoadFailure(el);
+              onFailure();
+            }
+          });
+        });
+      }
+      req();
+    },
+    /********************** requestAnimationFrame ********************************/
+    // 1、requestAnimationFrame 会把每一帧中的所有 DOM 操作集中起来，在一次重绘或回流中就完成，并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率，一般来说，这个频率为每秒60帧。
+    // 2、在隐藏或不可见的元素中，requestAnimationFrame 将不会进行重绘或回流，这当然就意味着更少的的 cpu，gpu 和内存使用量。
+    requestAnimationFrame: (fn) => {
+      if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
+      }
+      window.requestAnimationFrame(fn)
+    },
+    dark: {},
+  };
+
+  // utils.dark.mode 当前模式 dark or light
+  // utils.dark.toggle() 暗黑模式触发器
+  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
+  utils.dark.method = {
+    toggle: new RunItem(),
+  };
+  utils.dark = Object.assign(utils.dark, {
+    push: utils.dark.method.toggle.push,
+  });
+</script>
+<script>
+  const sidebar = {
+    leftbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    rightbar: () => {
+      if (l_body) {
+        l_body.toggleAttribute('rightbar');
+        l_body.removeAttribute('leftbar');
+      }
+    },
+    dismiss: () => {
+      if (l_body) {
+        l_body.removeAttribute('leftbar');
+        l_body.removeAttribute('rightbar');
+      }
+    },
+    toggleTOC: () => {
+      document.querySelector('#data-toc').classList.toggle('collapse');
+    }
+  }
+</script>
+<script type="text/javascript">
+  (() => {
+    const tagSwitchers = document.querySelectorAll('.tag-subtree.parent-tag > a > .tag-switcher-wrapper')
+    for (const tagSwitcher of tagSwitchers) {
+      tagSwitcher.addEventListener('click', (e) => {
+        const parent = e.target.closest('.tag-subtree.parent-tag')
+        parent.classList.toggle('expanded')
+        e.preventDefault()
+      })
+    }
+
+    // Get active tag from query string, then activate it.
+    const urlParams = new URLSearchParams(window.location.search)
+    const activeTag = urlParams.get('tag')
+    if (activeTag) {
+      let tag = document.querySelector(`.tag-subtree[data-tag="${activeTag}"]`)
+      if (tag) {
+        tag.querySelector('a').classList.add('active')
+        
+        while (tag) {
+          tag.classList.add('expanded')
+          tag = tag.parentElement.closest('.tag-subtree.parent-tag')
+        }
+      }
+    }
+  })()
+</script>
+
+
+<!-- required -->
+<script src="/js/main.js?v=1.30.0" defer></script>
+
+<script type="text/javascript">
+  const applyTheme = (theme) => {
+    if (theme === 'auto') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', theme)
+    }
+
+    applyThemeToGiscus(theme)
+  }
+
+  const applyThemeToGiscus = (theme) => {
+    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
+
+    const cmt = document.getElementById('giscus')
+    if (cmt) {
+      // This works before giscus load.
+      cmt.setAttribute('data-theme', theme)
+    }
+
+    const iframe = document.querySelector('#comments > section.giscus > iframe')
+    if (iframe) {
+      // This works after giscus loaded.
+      const src = iframe.src
+      const newSrc = src.replace(/theme=[\w]+/, `theme=${theme}`)
+      iframe.src = newSrc
+    }
+  }
+
+  const switchTheme = () => {
+    // light -> dark -> auto -> light -> ...
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    let newTheme;
+    switch (currentTheme) {
+      case 'light':
+        newTheme = 'dark'
+        break
+      case 'dark':
+        newTheme = 'auto'
+        break
+      default:
+        newTheme = 'light'
+    }
+    applyTheme(newTheme)
+    window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
+
+    const messages = {
+      light: `切换到浅色模式`,
+      dark: `切换到深色模式`,
+      auto: `切换到跟随系统配色`,
+    }
+    hud?.toast?.(messages[newTheme])
+  }
+
+  (() => {
+    // Apply user's preferred theme, if any.
+    const theme = window.localStorage.getItem('Stellar.theme')
+    if (theme !== null) {
+      applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    utils.dark.method.toggle.start();
+  })()
+</script>
+
+
+<!-- optional -->
+
+
+
+<script defer>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`{"mdrender":{"js":"/js/services/mdrender.js"},"siteinfo":{"js":"/js/services/siteinfo.js","api":"https://site-info-api-beta.vercel.app/api/v1?url={href}"},"ghinfo":{"js":"/js/services/ghinfo.js"},"sites":{"js":"/js/services/sites.js"},"friends":{"js":"/js/services/friends.js"},"timeline":{"js":"/js/services/timeline.js"},"fcircle":{"js":"/js/services/fcircle.js"},"weibo":{"js":"/js/services/weibo.js"},"memos":{"js":"/js/services/memos.js"},"voice":{"js":"/js/plugins/voice.js"},"video":{"js":"/js/plugins/video.js"},"download-file":{"js":"/js/plugins/download-file.js"},"twikoo":{"js":"/js/services/twikoo_latest_comment.js"},"waline":{"js":"/js/services/waline_latest_comment.js"},"artalk":{"js":"/js/services/artalk_latest_comment.js"},"giscus":{"js":"/js/services/giscus_latest_comment.js"}}`));
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id].js;
+      if (id == 'siteinfo') {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(ctx.cardlinks);
+          });
+        }
+      } else if (id == 'voice') {
+        ctx.voiceAudios = document.querySelectorAll('.voice>audio');
+        if (ctx.voiceAudios?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            createVoiceDom(ctx.voiceAudios);
+          });
+        }
+      } else if (id == 'video') {
+        ctx.videos = document.querySelectorAll('.video>video');
+        if (ctx.videos?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            videoEvents(ctx.videos);
+          });
+        }
+      } else if (id == 'download-file') {
+        ctx.files = document.querySelectorAll('.file');
+        if (ctx.files?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            downloadFileEvent(ctx.files);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`ds-${id}`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+
+    // chat iphone time
+    let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+
+    if (phoneTimes.length > 0) {
+      NowTime();
+      var date = new Date();
+      var sec = date.getSeconds();
+      var firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
+    }
+
+    function firstAdjustTime() {
+      NowTime();
+      clearInterval(firstAdjustInterval);
+      setInterval(NowTime, 1000 * 60);
+    }
+
+    function NowTime() {
+      for (let i = 0; i < phoneTimes.length; ++i) {
+        var timeSpan = phoneTimes[i];
+        var date = new Date();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        timeSpan.innerHTML = check(hour) + ":" + check(min);
+      }
+    };
+
+    function check(val) {
+      if (val < 10) {
+        return ("0" + val);
+      }
+      return (val);
+    }
+
+    // chat quote
+    const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
+      entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
+          observer.unobserve(entry.target);
+          setTimeout(() => {
+            entry.target.classList.add('quote-blink');
+            setTimeout(() => {
+              entry.target.classList.remove('quote-blink');
+            }, 1000);
+          }, Math.max(100, 16) * (index + 1));
+        });
+    });
+
+    var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+    chatQuotes.forEach((quote) => {
+      quote.addEventListener('click', function () {
+        var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+        if (chatCellDom) {
+          var chatDiv = chatCellDom.parentElement;
+          var mid = chatDiv.clientHeight / 2;
+          var offsetTop = chatCellDom.offsetTop;
+          if (offsetTop > mid - chatCellDom.clientHeight / 2) {
+            chatDiv.scrollTo({
+              top: chatCellDom.offsetTop - mid + chatCellDom.clientHeight / 2,
+              behavior: "smooth"
+            });
+          } else {
+            chatDiv.scrollTo({
+              top: 0,
+              behavior: "smooth"
+            });
+          }
+          chat_quote_obverser.observe(chatCellDom);
+        }
+      });
+    });
+  });
+</script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `/search.json`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script><script>
+  window.FPConfig = {
+    delay: 0,
+    ignoreKeywords: [],
+    maxRPS: 5,
+    hoverDelay: 25
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js"></script>
+<script>
+  // https://www.npmjs.com/package/vanilla-lazyload
+  // Set the options globally
+  // to make LazyLoad self-initialize
+  window.lazyLoadOptions = {
+    elements_selector: ".lazy",
+  };
+  // Listen to the initialization event
+  // and get the instance of LazyLoad
+  window.addEventListener(
+    "LazyLoad::Initialized",
+    function (event) {
+      window.lazyLoadInstance = event.detail.instance;
+    },
+    false
+  );
+  document.addEventListener('DOMContentLoaded', function () {
+    window.lazyLoadInstance?.update();
+  });
+</script><script>
+  ctx.fancybox = {
+    selector: `.timenode p>img`,
+    css: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css`,
+    js: `https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js`
+  };
+  var selector = '[data-fancybox]:not(.error)';
+  if (ctx.fancybox.selector) {
+    selector += `, ${ctx.fancybox.selector}`
+  }
+  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  if (!needFancybox) {
+    const els = document.getElementsByClassName('ds-memos');
+    if (els != undefined && els.length > 0) {
+      needFancybox = true;
+    }
+  }
+  if (needFancybox) {
+    utils.css(ctx.fancybox.css);
+    utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || slide.triggerEl.dataset.caption || null
+        }
+      });
+    })
+  }
+</script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const swiper_api = document.getElementById('swiper-api');
+    if (swiper_api != undefined) {
+      utils.css(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css`);
+      utils.js(`https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js`, { defer: true }).then(function () {
+        const effect = swiper_api.getAttribute('effect') || '';
+        var swiper = new Swiper('.swiper#swiper-api', {
+          slidesPerView: 'auto',
+          spaceBetween: 8,
+          centeredSlides: true,
+          effect: effect,
+          rewind: true,
+          pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+      })
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    window.codeElements = document.querySelectorAll('.code');
+    if (window.codeElements.length > 0) {
+      ctx.copycode = {
+        default_text: `Copy`,
+        success_text: `Copied`,
+        toast: `复制成功`,
+      };
+      utils.js('/js/plugins/copycode.js');
+    }
+  });
+</script>
+
+
+<!-- inject -->
+
+</div></body></html>

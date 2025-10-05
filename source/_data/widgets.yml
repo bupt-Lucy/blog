@@ -1,0 +1,12 @@
+timeline:
+  layout: timeline
+  title: 近期动态
+  api: https://api.github.com/repos/xaoxuu/blog-timeline/issues
+  user: xaoxuu
+
+timeline_seckill_more:
+  layout: timeline
+  title: Seckill System 近期动态
+  api: https://api.github.com/repos/bupt-Lucy/seckill-system/issues
+  user: bupt-Lucy
+  hide: footer
