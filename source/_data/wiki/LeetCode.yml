@@ -1,9 +1,9 @@
-name: LeetCode on my way
+name: LeetCode
 title: LeetCode - ing
-subtitle: 'LeetCode | 进化中'
+subtitle: '征服Leetcode | 学习中'
 tags: LeetCode
 icon: 
-description: 心得、耐心、坚持。
+description: 耐心、坚持
 search:
   filter: /wiki/LeetCode/
   placeholder: 在 LeetCode 中搜索...
@@ -12,4 +12,5 @@ leftbar:
   - related
 base_dir: /wiki/LeetCode/
 tree:
-  - 数组&链表&栈与队列
+  - 1-刷题记录
+  - Java集合框架-栈与队列实现选择
