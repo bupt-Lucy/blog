@@ -14,3 +14,4 @@ base_dir: /wiki/LeetCode/
 tree:
   - 1-刷题记录
   - Java集合框架-栈与队列实现选择
+  - 哈希表
