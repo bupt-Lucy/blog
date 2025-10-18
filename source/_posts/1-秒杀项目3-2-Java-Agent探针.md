@@ -158,7 +158,7 @@ public class MethodTimerInterceptor {
 {%image https://xylumina.oss-cn-beijing.aliyuncs.com/img/202510181755233.png %}
 #### 结果
 {%image https://xylumina.oss-cn-beijing.aliyuncs.com/img/202510181755204.png %}
-- 可以观测到，一开始的时候耗时400~500毫秒，后期变成了30~40毫秒。
+- 可以观测到，一开始的时候耗时400-500毫秒，后期变成了30-40毫秒。
 - 分析：刚开始的 400-500ms 是冷启动的成本，而 30-40ms 才是这个方法热身后的真正性能。
 ### 学学八股
 #### mini-apm-agent
