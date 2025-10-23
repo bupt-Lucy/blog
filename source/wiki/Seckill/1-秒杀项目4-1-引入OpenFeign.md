@@ -115,8 +115,7 @@ public class TestFeignController {
 - **工作原理**
 1. Spring 的动态代理：
   - 当seckill-api启动时，扫描到SeckillApplication上有@EnableFeignClient注解。
-  - 扫描指定包或所有包，找到了OrderServiceClient这个接口（有注解，@FeignClient(name = "order-service")
-）。发现这是一个@FeignClient接口，Spring不会去寻找这个接口的实现类，而是在内存中动态地创建了一个“代理实现类”。
+  - 扫描指定包或所有包，找到了OrderServiceClient这个接口（有注解，@FeignClient(name = "order-service")）。发现这是一个@FeignClient接口，Spring不会去寻找这个接口的实现类，而是在内存中动态地创建了一个“代理实现类”。
   - 当TestFeignController需要@Autowired一个OrderServiceClient时，Spring就会把这个在内存中动态生成的代理对象注入进去，
 2. 调用时：当调用OrderServiceClient.echo("Hello")时，实际上是对这个代理对象下达命令，这个代理对象内部的调用处理器会立刻被激活，并执行下列命令。
   - 解析指令：代理对象会查看调用的echo方法，并读取上面的注解：@GetMapping("/api/v1/order/echo/{message}") 和 @PathVariable String message
