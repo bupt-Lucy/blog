@@ -107,7 +107,7 @@ public class TestFeignController {
 - 打开浏览器，访问 seckill-api 上我们新创建的测试接口：http://localhost:8080/test-feign/Hello_Microservice
 ##### 结果
 {%image https://xylumina.oss-cn-beijing.aliyuncs.com/img/202510221545696.png %}
-{%Image https://xylumina.oss-cn-beijing.aliyuncs.com/img/202510221546915.png %}
+{%image https://xylumina.oss-cn-beijing.aliyuncs.com/img/202510221546915.png %}
 - 浏览器显示：Feign Call OK! Response: Hello from order-service on port 8081, I received: Hello_Microservice
 ### 学学八股
 #### OpenFeign
