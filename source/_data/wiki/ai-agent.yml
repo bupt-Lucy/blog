@@ -1,0 +1,15 @@
+name: ai-agent
+title: ai-agent - ing
+subtitle: '征服ai-agent | 学习中'
+tags: ai-agent
+icon: 
+description: 耐心、坚持
+search:
+  filter: /wiki/ai-agent/
+  placeholder: 在 ai-agent 中搜索...
+leftbar: 
+  - tree
+  - related
+base_dir: /wiki/ai-agent/
+tree:
+  - 2-ai项目-启动+最小闭环+多轮记忆链路
